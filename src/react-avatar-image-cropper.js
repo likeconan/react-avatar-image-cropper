@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 
 class SliderBtn extends Component {
     constructor(props) {
@@ -8,12 +9,12 @@ class SliderBtn extends Component {
             relX: 0
         }
     }
-    
+
     componentDidMount() {
         this.sliderW = ReactDOM.findDOMNode(this).offsetWidth;
         this.offsetLeft = ReactDOM.findDOMNode(this).getBoundingClientRect().left
     }
-    
+
     sliderW = 0;
     offsetLeft = 0;
 
@@ -25,7 +26,7 @@ class SliderBtn extends Component {
         position: 'relative',
         border: 0,
         boxShadow: 'inset 0 0 3px rgba(0,0,0,0.15)',
-    }, this.props.sliderStyle)
+    })
 
     sliderBtnStyle = Object.assign({
         position: 'absolute',
@@ -39,7 +40,7 @@ class SliderBtn extends Component {
         cursor: 'pointer',
         boxShadow: '0 0 3px rgba(0,0,0,0.1)',
         border: '1px solid #c5c5c5'
-    }, this.props.sliderBtnStyle)
+    })
 
     _onMouseDown = (e) => {
         document.addEventListener('mousemove', this._onMouseMove);
@@ -73,8 +74,58 @@ class SliderBtn extends Component {
     }
 }
 
-
 class AvatarImageCropper extends Component {
+    static propTypes = {
+        /**
+         * Should be used to pass `icon` components.
+         */
+        icon: PropTypes.node,
+        /**
+         * Should be used to pass `actions` components.
+         */
+        actions: PropTypes.node,
+        /**
+         * Should be used to for file maxsize.
+         */
+        maxsize: PropTypes.number,
+        /**
+         * The css class name of the root element.
+         */
+        className: PropTypes.string,
+        /**
+         * Override the inline-styles of the initial icon style.
+         */
+        iconStyle: PropTypes.object,
+        /**
+         * Override the inline-styles of the initial text style.
+         */
+        textStyle: PropTypes.object,
+        /**
+         * Override the inline-styles of the root element.
+         */
+        rootStyle: PropTypes.object,
+        /**
+         * Override the inline-styles of the slider conatiner.
+         */
+        sliderConStyle: PropTypes.object,
+        /**
+        * Override the inline-styles of the cancel button.
+        */
+        cancelBtnStyle: PropTypes.object,
+        /**
+        * Override the inline-styles of the apply button.
+        */
+        applyBtnStyle: PropTypes.object,
+        /**
+         * Called when apply clicked
+         */
+        apply: PropTypes.func,
+        /**
+         * Called when canceled.
+         */
+        cancel: PropTypes.func,
+    };
+
     constructor(props) {
         super(props);
         this.state = {
@@ -85,7 +136,6 @@ class AvatarImageCropper extends Component {
             relY: 0,
             sizeW: 0,
             sizeH: 0,
-
         }
     }
     iconStyle = Object.assign({
@@ -121,7 +171,7 @@ class AvatarImageCropper extends Component {
         zIndex: 8,
         width: '100%',
         cursor: 'pointer'
-    }, this.props.inputStyle);
+    });
 
     previewStyle = Object.assign({
         position: 'absolute',
@@ -133,7 +183,7 @@ class AvatarImageCropper extends Component {
         backgroundRepeat: 'no-repeat',
         cursor: 'move',
         backgroundPosition: '0% 0%'
-    }, this.props.previewStyle)
+    })
 
     cropStyle = Object.assign({
         height: '100%',
@@ -302,9 +352,15 @@ class AvatarImageCropper extends Component {
         crop_canvas.height = this.avatar2D.height;
         var ratio = this.state.sizeW / this.img2D.width;
         crop_canvas.getContext('2d').drawImage(this.img, -this.state.relX / ratio, -this.state.relY / ratio, this.img2D.width, this.img2D.height, 0, 0, this.state.sizeW, this.state.sizeH);
-        var base64ImageData = crop_canvas.toDataURL("image/png");
+        var base64ImageData = crop_canvas.toBlob((blob) => {
+            this.props.apply(blob);
+        });
+
+    }
+    _cancel = () => {
+        this.ele.children[0].children[1].value = ""
         this.setState({
-            src: base64ImageData
+            preview: null
         })
     }
 
@@ -317,7 +373,8 @@ class AvatarImageCropper extends Component {
                     <div>
                         {this.props.icon
                             ? this.props.icon
-                            : (
+                            :
+                            (
                                 <svg viewBox="0 0 24 24" style={this.iconStyle}>
                                     <circle cx="12" cy="12" r="3.2"></circle>
                                     <path
@@ -368,7 +425,7 @@ class AvatarImageCropper extends Component {
                                             :
                                             (
                                                 <div style={{ display: 'flex' }}>
-                                                    <button style={this.cancelBtnStyle}>
+                                                    <button style={this.cancelBtnStyle} onClick={this._cancel}>
                                                         <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                                                             <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
                                                             <path d="M0 0h24v24H0z" fill="none" />
@@ -391,7 +448,6 @@ class AvatarImageCropper extends Component {
                         </div>
                     )
                 }
-                <img style={{ position: 'fixed', bottom: '250px' }} src={this.state.src} />
             </avatar-image>
 
         );

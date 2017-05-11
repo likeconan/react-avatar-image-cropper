@@ -36,5 +36,8 @@
     "browserify-global-shim": "^1.0.3",
     "react": "^15.4.2",
     "uglify-js": "^2.7.5"
+  },
+  "dependencies": {
+    "prop-types": "^15.5.9"
   }
 }
