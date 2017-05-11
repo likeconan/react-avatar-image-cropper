@@ -1,11 +1,11 @@
 {
   "name": "react-avatar-image-cropper",
   "version": "1.0.0",
-  "description": "",
+  "description": "This is a light library without any dependencies for cropping image for avatar",
   "main": "./lib/react-avatar-image-cropper.js",
   "scripts": {
     "start": "babel ./src --out-dir ./lib --source-maps --presets es2015,react,stage-0 ",
-    "prepublish": "babel ./src --out-dir ./lib --source-maps --presets es2015,react,stage-0 --plugins babel-plugin-add-module-exports && browserify ./lib/react-avatar-image-cropper.js ./lib/sliderBtn.js -o ./build/react-cropper.js --transform browserify-global-shim --standalone ReactCropper &&   uglifyjs ./build/react-cropper.js --compress --mangle --output ./build/react-cropper.min.js --source-map ./build/react-cropper.min.js.map",
+    "prepublish": "babel ./src --out-dir ./lib --source-maps --presets es2015,react,stage-0 --plugins babel-plugin-add-module-exports && browserify ./lib/react-avatar-image-cropper.js   -o ./build/react-cropper.js --transform browserify-global-shim --standalone ReactCropper &&   uglifyjs ./build/react-cropper.js --compress --mangle --output ./build/react-cropper.min.js --source-map ./build/react-cropper.min.js.map",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "browserify-global-shim": {
@@ -33,6 +33,7 @@
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-0": "^6.22.0",
     "browserify": "^14.3.0",
+    "browserify-global-shim": "^1.0.3",
     "react": "^15.4.2",
     "uglify-js": "^2.7.5"
   }
