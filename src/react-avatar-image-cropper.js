@@ -257,10 +257,11 @@ class AvatarImageCropper extends Component {
     onDrop = (evt) => {
         var fileList = evt.target.files
         var acceptedFiles = [];
+        var maxsize = this.props.maxsize
+            ? this.props.maxsize
+            : 1024 * 1024 * 2;
         for (let file of fileList) {
-            if ((file.type.indexOf('png') >= 0 || file.type.indexOf('jpg') >= 0 || file.type.indexOf('jpeg') >= 0) && file.size < this.props.maxsize
-                ? this.props.maxsize
-                : 1024 * 1024 * 2) {
+            if ((file.type.indexOf('png') >= 0 || file.type.indexOf('jpg') >= 0 || file.type.indexOf('jpeg') >= 0) && file.size < maxsize) {
                 acceptedFiles.push(file);
                 var src = window
                     .URL
@@ -352,7 +353,7 @@ class AvatarImageCropper extends Component {
         crop_canvas.height = this.avatar2D.height;
         var ratio = this.state.sizeW / this.img2D.width;
         crop_canvas.getContext('2d').drawImage(this.img, -this.state.relX / ratio, -this.state.relY / ratio, this.img2D.width, this.img2D.height, 0, 0, this.state.sizeW, this.state.sizeH);
-        var base64ImageData = crop_canvas.toBlob((blob) => {
+        crop_canvas.toBlob((blob) => {
             this.props.apply(blob);
         });
 
@@ -368,7 +369,8 @@ class AvatarImageCropper extends Component {
         const { relX, relY, sizeW, sizeH } = this.state;
 
         return (
-            <avatar-image style={{ height: '100%', display: 'block', position: 'relative' }}>
+            <avatar-image class={this.props.className}
+                style={{ height: '100%', display: 'block', position: 'relative' }}>
                 <div style={this.rootStyle}>
                     <div>
                         {this.props.icon

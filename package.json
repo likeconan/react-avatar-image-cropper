@@ -4,7 +4,7 @@
   "description": "This is a light library without any dependencies for cropping image for avatar",
   "main": "./lib/react-avatar-image-cropper.js",
   "scripts": {
-    "start": "babel ./src --out-dir ./lib --source-maps --presets es2015,react,stage-0 ",
+    "build": "babel ./src --out-dir ./lib --source-maps --presets es2015,react,stage-0 ",
     "prepublish": "babel ./src --out-dir ./lib --source-maps --presets es2015,react,stage-0 --plugins babel-plugin-add-module-exports && browserify ./lib/react-avatar-image-cropper.js   -o ./build/react-cropper.js --transform browserify-global-shim --standalone ReactCropper &&   uglifyjs ./build/react-cropper.js --compress --mangle --output ./build/react-cropper.min.js --source-map ./build/react-cropper.min.js.map",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
