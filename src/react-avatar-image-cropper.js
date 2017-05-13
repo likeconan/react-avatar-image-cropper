@@ -132,6 +132,10 @@ class AvatarImageCropper extends Component {
          * Called when canceled.
          */
         cancel: PropTypes.func,
+        /**
+         * error with file.
+         */
+        errorHandler: PropTypes.func,
     };
 
     constructor(props) {
@@ -144,6 +148,7 @@ class AvatarImageCropper extends Component {
             relY: 0,
             sizeW: 0,
             sizeH: 0,
+            errorMsg: ''
         }
     }
     color = this.props.isBack ? '#ffffff' : 'rgba(148,148,148,1)';
@@ -277,40 +282,57 @@ class AvatarImageCropper extends Component {
         var maxsize = this.props.maxsize
             ? this.props.maxsize
             : 1024 * 1024 * 2;
-        for (let file of fileList) {
-            if ((file.type.indexOf('png') >= 0 || file.type.indexOf('jpg') >= 0 || file.type.indexOf('jpeg') >= 0) && file.size < maxsize) {
-                acceptedFiles.push(file);
-                var src = window
-                    .URL
-                    .createObjectURL(file);
-                var img = new Image();
-                img.src = src;
-                img.onload = () => {
-                    this.img = img;
-                    this.img2D.width = img.width;
-                    this.img2D.height = img.height;
-                    this.img2D.ratio = img.width / img.height;
-                    var sizeW = this.img2D.ratio >= 1 ? this.avatar2D.height * this.img2D.ratio : this.avatar2D.width;
-                    sizeW = sizeW < this.avatar2D.width ? this.avatar2D.width : sizeW
-                    var sizeH = sizeW / this.img2D.ratio;
-                    this.setState({
-                        sizeW: Math.ceil(sizeW),
-                        sizeH: sizeH,
+        var file = fileList[0];
 
-                    })
-                    this.origin = {
-                        width: sizeW,
-                        height: sizeH
-                    }
-                };
+        var ifImage = file.type.indexOf('png') >= 0 || file.type.indexOf('jpg') >= 0 || file.type.indexOf('jpeg') >= 0;
 
-                file.preview = src;
+        if (ifImage && file.size <= maxsize) {
+            acceptedFiles.push(file);
+            var src = window.URL.createObjectURL(file);
+            var img = new Image();
+            img.src = src;
+            img.onload = () => {
+                this.img = img;
+                this.img2D.width = img.width;
+                this.img2D.height = img.height;
+                this.img2D.ratio = img.width / img.height;
+                var sizeW = this.img2D.ratio >= 1 ? this.avatar2D.height * this.img2D.ratio : this.avatar2D.width;
+                sizeW = sizeW < this.avatar2D.width ? this.avatar2D.width : sizeW
+                var sizeH = sizeW / this.img2D.ratio;
+                this.setState({
+                    sizeW: Math.ceil(sizeW),
+                    sizeH: sizeH,
+                    errorMsg: ''
+                })
+                this.origin = {
+                    width: sizeW,
+                    height: sizeH
+                }
+            };
+
+            file.preview = src;
+        } else if (!ifImage) {
+            if (this.props.errorHandler) {
+                this.props.errorHandler('not_image')
+                return;
+            } else {
+                this.setState({
+                    errorMsg: 'Please upload png/jpg/jpeg image'
+                })
+            }
+        } else if (file.size > maxsize) {
+            if (this.props.errorHandler) {
+                this.props.errorHandler('maxsize')
+                return;
+            } else {
+                this.setState({
+                    errorMsg: 'The size of image is too large'
+                })
             }
         }
 
         if (acceptedFiles.length) {
             this.setState({ preview: acceptedFiles[0].preview })
-
             if (this.props.onDrop) {
                 this
                     .props
@@ -371,7 +393,10 @@ class AvatarImageCropper extends Component {
         var ratio = this.state.sizeW / this.img2D.width;
         crop_canvas.getContext('2d').drawImage(this.img, -this.state.relX / ratio, -this.state.relY / ratio, this.img2D.width, this.img2D.height, 0, 0, this.state.sizeW, this.state.sizeH);
         crop_canvas.toBlob((blob) => {
-            this._cancel();
+            this.ele.children[0].children[1].value = ""
+            this.setState({
+                preview: null
+            })
             this.props.apply(blob);
         });
 
@@ -381,6 +406,9 @@ class AvatarImageCropper extends Component {
         this.setState({
             preview: null
         })
+        if (this.props.cancel) {
+            this.props.cancel();
+        }
     }
 
     render() {
@@ -424,6 +452,7 @@ class AvatarImageCropper extends Component {
                             )
                         }
                         <p style={this.textStyle}>{this.props.text ? this.props.text : 'Upload photo'}</p>
+                        <p style={{ color: 'red' }}>{this.state.errorMsg}</p>
                     </div>
                     <input
                         style={this.inputStyle}

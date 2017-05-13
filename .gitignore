@@ -24,12 +24,8 @@ coverage
 # node-waf configuration
 .lock-wscript
 
-# Compiled binary addons (http://nodejs.org/api/addons.html)
-build/Release
-
 # Dependency directories
 node_modules
-build
 jspm_packages
 /typings/
 # Optional npm cache directory
@@ -46,4 +42,3 @@ jspm_packages
 
 # Yarn Integrity file
 .yarn-integrity
-/public/build/
