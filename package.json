@@ -5,7 +5,7 @@
   "main": "./lib/react-avatar-image-cropper.js",
   "scripts": {
     "build": "babel ./src --out-dir ./lib --source-maps --presets es2015,react,stage-0 ",
-    "prepublish": "babel ./src --out-dir ./lib --source-maps --presets es2015,react,stage-0 --plugins babel-plugin-add-module-exports && browserify ./lib/react-avatar-image-cropper.js   -o ./build/avatar-image-cropper.js --transform browserify-global-shim --standalone AvatarImageCropper &&   uglifyjs ./build/avatar-image-cropper.js --compress --mangle --output ./build/avatar-image-cropper.min.js --source-map ./build/avatar-image-cropper.min.js.map",
+    "prepublish": "babel ./src --out-dir ./lib --source-maps --presets es2015,react,stage-0 --plugins babel-plugin-add-module-exports && browserify ./lib/react-avatar-image-cropper.js   -o ./dist/avatar-image-cropper.js --transform browserify-global-shim --standalone AvatarImageCropper &&   uglifyjs ./dist/avatar-image-cropper.js --compress --mangle --output ./dist/avatar-image-cropper.min.js --source-map ./dist/avatar-image-cropper.min.js.map",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "browserify-global-shim": {
