@@ -2,6 +2,10 @@
 
 A light library without any dependencies cropping tool for React.
 
+# Demo
+
+## <a href="https://jsfiddle.net/LeeConan/cmre14xm/" target="_blank">Online Demo</a>
+
 # Installation
 
     npm i react-avatar-image-cropper --save
