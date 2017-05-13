@@ -33,9 +33,24 @@ Set the container for cropper and pass apply function for handling cropped file,
 
 Most of the props is used for customizing the display:
 
-### actions(optional, react component)
+### isBack(optional, bool, default:false)
 
-replace the cancel/apply buttons with customized button
+when there is a background image in container, pass true to change the avatar background and text color
+
+### text(optional, string, default:Upload photo)
+
+replace the initial text.
+
+### actions(optional, array of react components)
+
+replace the cancel/apply buttons with customized button.
+The first one must be as cancel, and the second one must be as apply
+
+    const actions = [
+            <button key={0}>test_cancel</button>,
+            <button key={1}>test_apply</button>,
+        ]
+     <AvatarImageCr apply={this.apply} actions={actions} />
 
 ### icon(optional, react component)
 

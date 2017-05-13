@@ -79,11 +79,19 @@ class AvatarImageCropper extends Component {
         /**
          * Should be used to pass `icon` components.
          */
+        isBack: PropTypes.bool,
+        /**
+         * Should be used to pass `icon` components.
+         */
         icon: PropTypes.node,
         /**
-         * Should be used to pass `actions` components.
+        * Should be used to pass text.
+        */
+        text: PropTypes.string,
+        /**
+         * Should be used to pass `actions` array of components.
          */
-        actions: PropTypes.node,
+        actions: PropTypes.array,
         /**
          * Should be used to for file maxsize.
          */
@@ -138,16 +146,18 @@ class AvatarImageCropper extends Component {
             sizeH: 0,
         }
     }
+    color = this.props.isBack ? '#ffffff' : 'rgba(148,148,148,1)';
     iconStyle = Object.assign({
         display: 'inline-block',
-        fill: 'rgba(148,148,148,1)',
+        color: this.color,
+        fill: 'currentcolor',
         height: 32,
         width: 32,
         userSelect: 'none'
     }, this.props.iconStyle);
 
     textStyle = Object.assign({
-        color: 'rgba(148,148,148,1)',
+        color: this.color,
         fontSize: '18px'
     }, this.props.textStyle);
 
@@ -193,6 +203,13 @@ class AvatarImageCropper extends Component {
         alignItems: 'center',
         backgroundColor: 'rgba(0,0,0,0.5)'
     })
+
+    avatarStyle = {
+        height: '100%',
+        display: 'block',
+        position: 'relative',
+        backgroundColor: this.props.isBack ? 'rgba(0,0,0,0.4)' : 'transparent'
+    }
 
     sliderConStyle = Object.assign({
         position: 'absolute',
@@ -354,6 +371,7 @@ class AvatarImageCropper extends Component {
         var ratio = this.state.sizeW / this.img2D.width;
         crop_canvas.getContext('2d').drawImage(this.img, -this.state.relX / ratio, -this.state.relY / ratio, this.img2D.width, this.img2D.height, 0, 0, this.state.sizeW, this.state.sizeH);
         crop_canvas.toBlob((blob) => {
+            this._cancel();
             this.props.apply(blob);
         });
 
@@ -367,10 +385,31 @@ class AvatarImageCropper extends Component {
 
     render() {
         const { relX, relY, sizeW, sizeH } = this.state;
-
+        var actions = this.props.actions ?
+            this.props.actions.map((ele, key) => {
+                var res = null;
+                switch (key) {
+                    case 0:
+                        res = React.cloneElement(
+                            ele,
+                            { onClick: this._cancel }
+                        );
+                        break;
+                    case 1:
+                        res = React.cloneElement(
+                            ele,
+                            { onClick: this._apply }
+                        );
+                    default:
+                        break;
+                }
+                return res
+            })
+            :
+            null
         return (
             <avatar-image class={this.props.className}
-                style={{ height: '100%', display: 'block', position: 'relative' }}>
+                style={this.avatarStyle}>
                 <div style={this.rootStyle}>
                     <div>
                         {this.props.icon
@@ -384,7 +423,7 @@ class AvatarImageCropper extends Component {
                                 </svg>
                             )
                         }
-                        <p style={this.textStyle}>Upload photo</p>
+                        <p style={this.textStyle}>{this.props.text ? this.props.text : 'Upload photo'}</p>
                     </div>
                     <input
                         style={this.inputStyle}
@@ -420,30 +459,26 @@ class AvatarImageCropper extends Component {
                                 <div style={{ height: '20px', margin: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
                                     <SliderBtn resize={this._resize} />
                                 </div>
-                                <div>
+                                <div name='action-con' style={{ display: 'flex' }}>
                                     {
-                                        this.props.actions ?
-                                            this.props.actions
+                                        actions ?
+                                            actions
                                             :
-                                            (
-                                                <div style={{ display: 'flex' }}>
-                                                    <button style={this.cancelBtnStyle} onClick={this._cancel}>
-                                                        <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-                                                            <path d="M0 0h24v24H0z" fill="none" />
-                                                        </svg>
-                                                    </button>
-                                                    <button style={this.applyBtnStyle} onClick={this._apply}>
-                                                        <svg fill="#ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
-                                                        </svg>
-                                                    </button>
-                                                </div>
-
-                                            )
+                                            [
+                                                <button style={this.cancelBtnStyle} key={0} onClick={this._cancel}>
+                                                    <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                                                        <path d="M0 0h24v24H0z" fill="none" />
+                                                    </svg>
+                                                </button>,
+                                                <button style={this.applyBtnStyle} key={1} onClick={this._apply}>
+                                                    <svg fill="#ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M0 0h24v24H0z" fill="none" />
+                                                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
+                                                    </svg>
+                                                </button>
+                                            ]
                                     }
-
                                 </div>
                             </div>
 
