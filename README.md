@@ -23,7 +23,7 @@ import AvatarImageCropper from 'react-avatar-image-cropper';
 also you can implement the library as external js, add the script in build directory like below:
 
 ```js
-    <script src="/build/avatar-image-cropper.min.js"></script>
+<script src="/dist/avatar-image-cropper.min.js"></script>
 ```
 you will get the AvatarImageCropper in window object.
 
