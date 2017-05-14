@@ -11,10 +11,17 @@ class SliderBtn extends Component {
     }
 
     componentDidMount() {
-        this.sliderW = ReactDOM.findDOMNode(this).offsetWidth;
-        this.offsetLeft = ReactDOM.findDOMNode(this).getBoundingClientRect().left
+        var ele = ReactDOM.findDOMNode(this);
+        this.sliderW = ele.offsetWidth;
+        this.offsetLeft = ele.getBoundingClientRect().left
+        if (this.ifMobile) {
+            ele.children[0].addEventListener('touchstart', this._onStart)
+        } else {
+            ele.children[0].addEventListener('mousedown', this._onStart)
+        }
     }
 
+    ifMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     sliderW = 0;
     offsetLeft = 0;
 
@@ -42,13 +49,20 @@ class SliderBtn extends Component {
         border: '1px solid #c5c5c5'
     })
 
-    _onMouseDown = (e) => {
-        document.addEventListener('mousemove', this._onMouseMove);
-        document.addEventListener('mouseup', this._onMouseUp);
+    _onStart = (e) => {
+        if (this.ifMobile) {
+            document.addEventListener('touchmove', this._onMove);
+            document.addEventListener('touchend', this._onUp);
+        } else {
+            document.addEventListener('mousemove', this._onMove);
+            document.addEventListener('mouseup', this._onUp);
+        }
+
         e.preventDefault();
     }
-    _onMouseMove = (e) => {
-        var relX = (e.clientX - this.offsetLeft) / this.sliderW * 100;
+    _onMove = (e) => {
+        var x = this.ifMobile ? e.touches[0].clientX : e.clientX;
+        var relX = (x - this.offsetLeft) / this.sliderW * 100;
         relX = relX > 100 ? 100 : relX;
         relX = relX < 0 ? 0 : relX;
         this.setState({
@@ -57,9 +71,14 @@ class SliderBtn extends Component {
         this.props.resize(relX);
         e.preventDefault();
     }
-    _onMouseUp = (e) => {
-        document.removeEventListener('mousemove', this._onMouseMove);
-        document.removeEventListener('mouseup', this._onMouseUp);
+    _onUp = (e) => {
+        if (this.ifMobile) {
+            document.removeEventListener('touchmove', this._onMove);
+            document.removeEventListener('touchend', this._onUp);
+        } else {
+            document.removeEventListener('mousemove', this._onMove);
+            document.removeEventListener('mouseup', this._onUp);
+        }
         e.preventDefault();
     }
 
@@ -68,7 +87,7 @@ class SliderBtn extends Component {
             <div style={this.sliderStyle}>
                 <span style={Object.assign({},
                     this.sliderBtnStyle, { left: this.state.relX + '%' })}
-                    onMouseDown={this._onMouseDown}></span>
+                ></span>
             </div>
         );
     }
@@ -152,6 +171,9 @@ class AvatarImageCropper extends Component {
         }
     }
     color = this.props.isBack ? '#ffffff' : 'rgba(148,148,148,1)';
+
+    ifMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
     iconStyle = Object.assign({
         display: 'inline-block',
         color: this.color,
@@ -209,12 +231,12 @@ class AvatarImageCropper extends Component {
         backgroundColor: 'rgba(0,0,0,0.5)'
     })
 
-    avatarStyle = {
+    avatarStyle = Object.assign({
         height: '100%',
         display: 'block',
         position: 'relative',
         backgroundColor: this.props.isBack ? 'rgba(0,0,0,0.4)' : 'transparent'
-    }
+    }, this.props.avatarStyle)
 
     sliderConStyle = Object.assign({
         position: 'absolute',
@@ -343,17 +365,29 @@ class AvatarImageCropper extends Component {
     }
 
     _onMouseDown = (e) => {
-        this.setState({
-            x: e.clientX - this.state.relX,
-            y: e.clientY - this.state.relY
-        })
-        document.addEventListener('mousemove', this._onMouseMove);
-        document.addEventListener('mouseup', this._onMouseUp);
+        if (this.ifMobile) {
+            this.setState({
+                x: e.touches[0].clientX - this.state.relX,
+                y: e.touches[0].clientY - this.state.relY
+            })
+            document.addEventListener('touchmove', this._onMove);
+            document.addEventListener('touchend', this._onMouseUp);
+        } else {
+            this.setState({
+                x: e.clientX - this.state.relX,
+                y: e.clientY - this.state.relY
+            })
+            document.addEventListener('mousemove', this._onMove);
+            document.addEventListener('mouseup', this._onMouseUp);
+        }
+
         e.preventDefault();
     }
-    _onMouseMove = (e) => {
-        var relX = this.state.x - e.clientX;
-        var relY = this.state.y - e.clientY;
+    _onMove = (e) => {
+        var x = this.ifMobile ? e.touches[0].clientX : e.clientX
+        var y = this.ifMobile ? e.touches[0].clientY : e.clientY
+        var relX = this.state.x - x;
+        var relY = this.state.y - y;
         if (relX < this.state.sizeW - this.avatar2D.width && relX > 0) {
             this.setState({
                 relX: -relX
@@ -368,8 +402,14 @@ class AvatarImageCropper extends Component {
         e.preventDefault();
     }
     _onMouseUp = (e) => {
-        document.removeEventListener('mousemove', this._onMouseMove);
-        document.removeEventListener('mouseup', this._onMouseUp);
+        if (this.ifMobile) {
+            document.removeEventListener('touchmove', this._onMove);
+            document.removeEventListener('touchend', this._onMouseUp);
+        } else {
+            document.removeEventListener('mousemove', this._onMove);
+            document.removeEventListener('mouseup', this._onMouseUp);
+        }
+
         e.preventDefault();
     }
     _resize = (val) => {
@@ -467,6 +507,7 @@ class AvatarImageCropper extends Component {
                             <div>
                                 <div
                                     onMouseDown={this._onMouseDown}
+                                    onTouchStart={this._onMouseDown}
                                     style={Object.assign({}, this.previewStyle, {
                                         backgroundImage: 'url(' + this.state.preview + ')',
                                         backgroundSize: sizeW + 'px ' + sizeH + 'px',

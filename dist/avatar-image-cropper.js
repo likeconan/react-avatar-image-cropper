@@ -35,6 +35,7 @@ var SliderBtn = function (_Component) {
 
         var _this = _possibleConstructorReturn(this, (SliderBtn.__proto__ || Object.getPrototypeOf(SliderBtn)).call(this, props));
 
+        _this.ifMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         _this.sliderW = 0;
         _this.offsetLeft = 0;
         _this.sliderStyle = Object.assign({
@@ -60,14 +61,21 @@ var SliderBtn = function (_Component) {
             border: '1px solid #c5c5c5'
         });
 
-        _this._onMouseDown = function (e) {
-            document.addEventListener('mousemove', _this._onMouseMove);
-            document.addEventListener('mouseup', _this._onMouseUp);
+        _this._onStart = function (e) {
+            if (_this.ifMobile) {
+                document.addEventListener('touchmove', _this._onMove);
+                document.addEventListener('touchend', _this._onUp);
+            } else {
+                document.addEventListener('mousemove', _this._onMove);
+                document.addEventListener('mouseup', _this._onUp);
+            }
+
             e.preventDefault();
         };
 
-        _this._onMouseMove = function (e) {
-            var relX = (e.clientX - _this.offsetLeft) / _this.sliderW * 100;
+        _this._onMove = function (e) {
+            var x = _this.ifMobile ? e.touches[0].clientX : e.clientX;
+            var relX = (x - _this.offsetLeft) / _this.sliderW * 100;
             relX = relX > 100 ? 100 : relX;
             relX = relX < 0 ? 0 : relX;
             _this.setState({
@@ -77,9 +85,14 @@ var SliderBtn = function (_Component) {
             e.preventDefault();
         };
 
-        _this._onMouseUp = function (e) {
-            document.removeEventListener('mousemove', _this._onMouseMove);
-            document.removeEventListener('mouseup', _this._onMouseUp);
+        _this._onUp = function (e) {
+            if (_this.ifMobile) {
+                document.removeEventListener('touchmove', _this._onMove);
+                document.removeEventListener('touchend', _this._onUp);
+            } else {
+                document.removeEventListener('mousemove', _this._onMove);
+                document.removeEventListener('mouseup', _this._onUp);
+            }
             e.preventDefault();
         };
 
@@ -92,8 +105,14 @@ var SliderBtn = function (_Component) {
     _createClass(SliderBtn, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-            this.sliderW = _reactDom2.default.findDOMNode(this).offsetWidth;
-            this.offsetLeft = _reactDom2.default.findDOMNode(this).getBoundingClientRect().left;
+            var ele = _reactDom2.default.findDOMNode(this);
+            this.sliderW = ele.offsetWidth;
+            this.offsetLeft = ele.getBoundingClientRect().left;
+            if (this.ifMobile) {
+                ele.children[0].addEventListener('touchstart', this._onStart);
+            } else {
+                ele.children[0].addEventListener('mousedown', this._onStart);
+            }
         }
     }, {
         key: 'render',
@@ -101,8 +120,8 @@ var SliderBtn = function (_Component) {
             return _react2.default.createElement(
                 'div',
                 { style: this.sliderStyle },
-                _react2.default.createElement('span', { style: Object.assign({}, this.sliderBtnStyle, { left: this.state.relX + '%' }),
-                    onMouseDown: this._onMouseDown })
+                _react2.default.createElement('span', { style: Object.assign({}, this.sliderBtnStyle, { left: this.state.relX + '%' })
+                })
             );
         }
     }]);
@@ -119,6 +138,7 @@ var AvatarImageCropper = function (_Component2) {
         var _this2 = _possibleConstructorReturn(this, (AvatarImageCropper.__proto__ || Object.getPrototypeOf(AvatarImageCropper)).call(this, props));
 
         _this2.color = _this2.props.isBack ? '#ffffff' : 'rgba(148,148,148,1)';
+        _this2.ifMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         _this2.iconStyle = Object.assign({
             display: 'inline-block',
             color: _this2.color,
@@ -170,12 +190,12 @@ var AvatarImageCropper = function (_Component2) {
             alignItems: 'center',
             backgroundColor: 'rgba(0,0,0,0.5)'
         });
-        _this2.avatarStyle = {
+        _this2.avatarStyle = Object.assign({
             height: '100%',
             display: 'block',
             position: 'relative',
             backgroundColor: _this2.props.isBack ? 'rgba(0,0,0,0.4)' : 'transparent'
-        };
+        }, _this2.props.avatarStyle);
         _this2.sliderConStyle = Object.assign({
             position: 'absolute',
             top: '100%',
@@ -287,18 +307,30 @@ var AvatarImageCropper = function (_Component2) {
         };
 
         _this2._onMouseDown = function (e) {
-            _this2.setState({
-                x: e.clientX - _this2.state.relX,
-                y: e.clientY - _this2.state.relY
-            });
-            document.addEventListener('mousemove', _this2._onMouseMove);
-            document.addEventListener('mouseup', _this2._onMouseUp);
+            if (_this2.ifMobile) {
+                _this2.setState({
+                    x: e.touches[0].clientX - _this2.state.relX,
+                    y: e.touches[0].clientY - _this2.state.relY
+                });
+                document.addEventListener('touchmove', _this2._onMove);
+                document.addEventListener('touchend', _this2._onMouseUp);
+            } else {
+                _this2.setState({
+                    x: e.clientX - _this2.state.relX,
+                    y: e.clientY - _this2.state.relY
+                });
+                document.addEventListener('mousemove', _this2._onMove);
+                document.addEventListener('mouseup', _this2._onMouseUp);
+            }
+
             e.preventDefault();
         };
 
-        _this2._onMouseMove = function (e) {
-            var relX = _this2.state.x - e.clientX;
-            var relY = _this2.state.y - e.clientY;
+        _this2._onMove = function (e) {
+            var x = _this2.ifMobile ? e.touches[0].clientX : e.clientX;
+            var y = _this2.ifMobile ? e.touches[0].clientY : e.clientY;
+            var relX = _this2.state.x - x;
+            var relY = _this2.state.y - y;
             if (relX < _this2.state.sizeW - _this2.avatar2D.width && relX > 0) {
                 _this2.setState({
                     relX: -relX
@@ -314,8 +346,14 @@ var AvatarImageCropper = function (_Component2) {
         };
 
         _this2._onMouseUp = function (e) {
-            document.removeEventListener('mousemove', _this2._onMouseMove);
-            document.removeEventListener('mouseup', _this2._onMouseUp);
+            if (_this2.ifMobile) {
+                document.removeEventListener('touchmove', _this2._onMove);
+                document.removeEventListener('touchend', _this2._onMouseUp);
+            } else {
+                document.removeEventListener('mousemove', _this2._onMove);
+                document.removeEventListener('mouseup', _this2._onMouseUp);
+            }
+
             e.preventDefault();
         };
 
@@ -443,6 +481,7 @@ var AvatarImageCropper = function (_Component2) {
                         null,
                         _react2.default.createElement('div', {
                             onMouseDown: this._onMouseDown,
+                            onTouchStart: this._onMouseDown,
                             style: Object.assign({}, this.previewStyle, {
                                 backgroundImage: 'url(' + this.state.preview + ')',
                                 backgroundSize: sizeW + 'px ' + sizeH + 'px',

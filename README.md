@@ -1,6 +1,7 @@
 # React Avatar Image Cropper
 
 A light library without any dependencies cropping tool for React.
+Both working for web and mobile.
 
 # Demo
 
