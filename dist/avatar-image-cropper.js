@@ -472,7 +472,7 @@ var AvatarImageCropper = function (_Component2) {
                     _react2.default.createElement('input', {
                         style: this.inputStyle,
                         type: 'file',
-                        accept: 'images/*',
+                        accept: 'image/*',
                         onChange: function onChange(e) {
                             _this3.onDrop(e);
                         } }),
@@ -1028,11 +1028,14 @@ module.exports = checkPropTypes;
 
 var emptyFunction = require('fbjs/lib/emptyFunction');
 var invariant = require('fbjs/lib/invariant');
+var ReactPropTypesSecret = require('./lib/ReactPropTypesSecret');
 
 module.exports = function() {
-  // Important!
-  // Keep this list in sync with production version in `./factoryWithTypeCheckers.js`.
-  function shim() {
+  function shim(props, propName, componentName, location, propFullName, secret) {
+    if (secret === ReactPropTypesSecret) {
+      // It is still safe when called from React.
+      return;
+    }
     invariant(
       false,
       'Calling PropTypes validators directly is not supported by the `prop-types` package. ' +
@@ -1044,6 +1047,8 @@ module.exports = function() {
   function getShim() {
     return shim;
   };
+  // Important!
+  // Keep this list in sync with production version in `./factoryWithTypeCheckers.js`.
   var ReactPropTypes = {
     array: shim,
     bool: shim,
@@ -1070,7 +1075,7 @@ module.exports = function() {
   return ReactPropTypes;
 };
 
-},{"fbjs/lib/emptyFunction":2,"fbjs/lib/invariant":3}],8:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":10,"fbjs/lib/emptyFunction":2,"fbjs/lib/invariant":3}],8:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.

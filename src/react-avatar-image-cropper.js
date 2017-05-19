@@ -497,7 +497,7 @@ class AvatarImageCropper extends Component {
                     <input
                         style={this.inputStyle}
                         type='file'
-                        accept='images/*'
+                        accept='image/*'
                         onChange={(e) => {
                             this.onDrop(e)
                         }} />
