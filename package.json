@@ -1,6 +1,6 @@
 {
   "name": "react-avatar-image-cropper",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "This is a light library without any dependencies for cropping image for avatar",
   "main": "./lib/react-avatar-image-cropper.js",
   "scripts": {
