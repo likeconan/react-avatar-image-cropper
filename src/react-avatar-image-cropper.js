@@ -274,7 +274,7 @@ class AvatarImageCropper extends Component {
         }, this.props.applyBtnStyle)
 
     ele = null;
-
+    filename = '';
     avatar2D = {
         width: 0,
         height: 0,
@@ -354,7 +354,9 @@ class AvatarImageCropper extends Component {
         }
 
         if (acceptedFiles.length) {
+            this.filename = acceptedFiles[0].name;
             this.setState({ preview: acceptedFiles[0].preview })
+
             if (this.props.onDrop) {
                 this
                     .props
@@ -437,6 +439,7 @@ class AvatarImageCropper extends Component {
             this.setState({
                 preview: null
             })
+            blob.name = this.filename;
             this.props.apply(blob);
         });
 
