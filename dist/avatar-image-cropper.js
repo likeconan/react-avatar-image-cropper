@@ -229,6 +229,7 @@ var AvatarImageCropper = function (_Component2) {
             borderColor: '#4cae4c'
         }, _this2.props.applyBtnStyle);
         _this2.ele = null;
+        _this2.filename = '';
         _this2.avatar2D = {
             width: 0,
             height: 0,
@@ -299,7 +300,9 @@ var AvatarImageCropper = function (_Component2) {
             }
 
             if (acceptedFiles.length) {
+                _this2.filename = acceptedFiles[0].name;
                 _this2.setState({ preview: acceptedFiles[0].preview });
+
                 if (_this2.props.onDrop) {
                     _this2.props.onDrop(acceptedFiles[0]);
                 }
@@ -383,6 +386,7 @@ var AvatarImageCropper = function (_Component2) {
                 _this2.setState({
                     preview: null
                 });
+                blob.name = _this2.filename;
                 _this2.props.apply(blob);
             });
         };
