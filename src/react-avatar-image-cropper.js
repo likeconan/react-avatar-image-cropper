@@ -249,6 +249,14 @@ class AvatarImageCropper extends Component {
         justifyContent: 'center'
     }, this.props.sliderConStyle)
 
+    sliderChildrenDiv = Object.assign({
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        maxWidth: '600px',
+        width: '100%'
+    }, this.props.sliderChildrenDiv)
+
     btnStyle = {
         display: 'inline-block',
         fontSize: '14px',
@@ -296,6 +304,9 @@ class AvatarImageCropper extends Component {
         this.ele = ReactDOM.findDOMNode(this);
         this.avatar2D.width = this.ele.offsetWidth;
         this.avatar2D.height = this.ele.offsetHeight;
+        if (this.avatar2D.width < 200) {
+            this.sliderChildrenDiv = { ...this.sliderChildrenDiv, flexDirection: 'column' }
+        }
     }
 
     onDrop = (evt) => {
@@ -528,7 +539,7 @@ class AvatarImageCropper extends Component {
                     this.state.preview &&
                     (
                         <div style={this.sliderConStyle}>
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: '600px', width: '100%' }}>
+                            <div style={this.sliderChildrenDiv}>
                                 <div style={{ height: '20px', margin: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
                                     <SliderBtn resize={this._resize} />
                                 </div>
