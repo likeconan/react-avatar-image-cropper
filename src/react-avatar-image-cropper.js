@@ -25,7 +25,7 @@ class SliderBtn extends Component {
     sliderW = 0;
     offsetLeft = 0;
 
-    sliderStyle = Object.assign({
+    sliderStyle = {
         width: '90%',
         maxWidth: '250px',
         height: '7px',
@@ -33,9 +33,9 @@ class SliderBtn extends Component {
         position: 'relative',
         border: 0,
         boxShadow: 'inset 0 0 3px rgba(0,0,0,0.15)',
-    })
+    }
 
-    sliderBtnStyle = Object.assign({
+    sliderBtnStyle = {
         position: 'absolute',
         zIndex: '2',
         width: '16px',
@@ -47,7 +47,7 @@ class SliderBtn extends Component {
         cursor: 'pointer',
         boxShadow: '0 0 3px rgba(0,0,0,0.1)',
         border: '1px solid #c5c5c5'
-    })
+    }
 
     _onStart = (e) => {
         if (this.ifMobile) {
@@ -84,9 +84,8 @@ class SliderBtn extends Component {
 
     render() {
         return (
-            <div style={this.sliderStyle}>
-                <span style={Object.assign({},
-                    this.sliderBtnStyle, { left: this.state.relX + '%' })}
+            <div style={{ ...this.sliderStyle }}>
+                <span style={{ ...this.sliderBtnStyle, left: this.state.relX + '%' }}
                 ></span>
             </div>
         );
@@ -174,21 +173,21 @@ class AvatarImageCropper extends Component {
 
     ifMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-    iconStyle = Object.assign({
+    iconStyle = {
         display: 'inline-block',
         color: this.color,
         fill: 'currentcolor',
         height: 32,
         width: 32,
         userSelect: 'none'
-    }, this.props.iconStyle);
+    };
 
-    textStyle = Object.assign({
+    textStyle = {
         color: this.color,
         fontSize: '18px'
-    }, this.props.textStyle);
+    };
 
-    rootStyle = Object.assign({
+    rootStyle = {
         textAlign: 'center',
         height: '100%',
         display: 'flex',
@@ -196,21 +195,22 @@ class AvatarImageCropper extends Component {
         justifyContent: 'center',
         position: 'relative',
         overflow: 'hidden'
-    }, this.props.rootStyle);
+    };
 
-    inputStyle = Object.assign({
+    inputStyle = {
         position: 'absolute',
         top: 0,
         bottom: 0,
         right: 0,
         left: 0,
         opacity: 0,
+        height: '100%',
         zIndex: 8,
         width: '100%',
         cursor: 'pointer'
-    });
+    };
 
-    previewStyle = Object.assign({
+    previewStyle = {
         position: 'absolute',
         top: 0,
         bottom: 0,
@@ -220,25 +220,25 @@ class AvatarImageCropper extends Component {
         backgroundRepeat: 'no-repeat',
         cursor: 'move',
         backgroundPosition: '0% 0%'
-    })
+    }
 
-    cropStyle = Object.assign({
+    cropStyle = {
         height: '100%',
         width: '100%',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0,0,0,0.5)'
-    })
+    }
 
-    avatarStyle = Object.assign({
+    avatarStyle = {
         height: '100%',
         display: 'block',
         position: 'relative',
         backgroundColor: this.props.isBack ? 'rgba(0,0,0,0.4)' : 'transparent'
-    }, this.props.avatarStyle)
+    }
 
-    sliderConStyle = Object.assign({
+    sliderConStyle = {
         position: 'absolute',
         top: '100%',
         right: 0,
@@ -247,15 +247,15 @@ class AvatarImageCropper extends Component {
         backgroundColor: '#222',
         display: 'flex',
         justifyContent: 'center'
-    }, this.props.sliderConStyle)
+    }
 
-    sliderChildrenDiv = Object.assign({
+    sliderChildrenDiv = {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         maxWidth: '600px',
         width: '100%'
-    }, this.props.sliderChildrenDiv)
+    }
 
     btnStyle = {
         display: 'inline-block',
@@ -269,17 +269,20 @@ class AvatarImageCropper extends Component {
         borderRadius: '4px',
         margin: '5px'
     }
-    cancelBtnStyle = Object.assign({}, this.btnStyle, {
+    cancelBtnStyle = {
+        ...this.btnStyle,
         color: '#333',
         backgroundColor: '#fff',
-        borderColor: '#ccc'
-    }, this.props.cancelBtnStyle)
-    applyBtnStyle = Object.assign({}, this.btnStyle,
-        {
-            color: '#fff',
-            backgroundColor: '#5cb85c',
-            borderColor: '#4cae4c'
-        }, this.props.applyBtnStyle)
+        borderColor: '#ccc',
+    }
+
+
+    applyBtnStyle = {
+        ...this.btnStyle,
+        color: '#fff',
+        backgroundColor: '#5cb85c',
+        borderColor: '#4cae4c'
+    }
 
     ele = null;
     filename = '';
@@ -491,25 +494,25 @@ class AvatarImageCropper extends Component {
             null
         return (
             <avatar-image class={this.props.className}
-                style={this.avatarStyle}>
-                <div style={this.rootStyle}>
+                style={{ ...this.avatarStyle, ...this.props.avatarStyle }}>
+                <div style={{ ...this.rootStyle, ...this.props.rootStyle }}>
                     <div>
                         {this.props.icon
                             ? this.props.icon
                             :
                             (
-                                <svg viewBox="0 0 24 24" style={this.iconStyle}>
+                                <svg viewBox="0 0 24 24" style={{ ...this.iconStyle, ...this.props.iconStyle }}>
                                     <circle cx="12" cy="12" r="3.2"></circle>
                                     <path
                                         d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"></path>
                                 </svg>
                             )
                         }
-                        <p style={this.textStyle}>{this.props.text ? this.props.text : 'Upload photo'}</p>
+                        <p style={{ ...this.textStyle, ...this.props.textStyle }}>{this.props.text ? this.props.text : 'Upload photo'}</p>
                         <p style={{ color: 'red' }}>{this.state.errorMsg}</p>
                     </div>
                     <input
-                        style={this.inputStyle}
+                        style={{ ...this.inputStyle }}
                         type='file'
                         accept='image/*'
                         onChange={(e) => {
@@ -522,11 +525,12 @@ class AvatarImageCropper extends Component {
                                 <div
                                     onMouseDown={this._onMouseDown}
                                     onTouchStart={this._onMouseDown}
-                                    style={Object.assign({}, this.previewStyle, {
+                                    style={{
+                                        ...this.previewStyle,
                                         backgroundImage: 'url(' + this.state.preview + ')',
                                         backgroundSize: sizeW + 'px ' + sizeH + 'px',
                                         backgroundPosition: '' + relX + 'px ' + relY + 'px'
-                                    })}>
+                                    }}>
                                 </div>
 
                             </div>
@@ -538,24 +542,24 @@ class AvatarImageCropper extends Component {
                 {
                     this.state.preview &&
                     (
-                        <div style={this.sliderConStyle}>
-                            <div style={this.sliderChildrenDiv}>
+                        <div style={{ ...this.sliderConStyle, ...this.props.sliderConStyle }}>
+                            <div style={{ ...this.sliderChildrenDiv, ...this.props.sliderChildrenDiv }}>
                                 <div style={{ height: '20px', margin: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
                                     <SliderBtn resize={this._resize} />
                                 </div>
-                                <div name='action-con' style={{ display: 'flex' }}>
+                                <div name='action-con' style={{ display: 'flex', minWidth: '100px' }}>
                                     {
                                         actions ?
                                             actions
                                             :
                                             [
-                                                <button style={this.cancelBtnStyle} key={0} onClick={this._cancel}>
+                                                <button style={{ ...this.cancelBtnStyle, ...this.props.cancelBtnStyle }} key={0} onClick={this._cancel}>
                                                     <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
                                                         <path d="M0 0h24v24H0z" fill="none" />
                                                     </svg>
                                                 </button>,
-                                                <button style={this.applyBtnStyle} key={1} onClick={this._apply}>
+                                                <button style={{ ...this.applyBtnStyle, ...this.props.applyBtnStyle }} key={1} onClick={this._apply}>
                                                     <svg fill="#ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M0 0h24v24H0z" fill="none" />
                                                         <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />

@@ -40,7 +40,7 @@ var SliderBtn = function (_Component) {
         _this.ifMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         _this.sliderW = 0;
         _this.offsetLeft = 0;
-        _this.sliderStyle = Object.assign({
+        _this.sliderStyle = {
             width: '90%',
             maxWidth: '250px',
             height: '7px',
@@ -48,8 +48,8 @@ var SliderBtn = function (_Component) {
             position: 'relative',
             border: 0,
             boxShadow: 'inset 0 0 3px rgba(0,0,0,0.15)'
-        });
-        _this.sliderBtnStyle = Object.assign({
+        };
+        _this.sliderBtnStyle = {
             position: 'absolute',
             zIndex: '2',
             width: '16px',
@@ -61,7 +61,7 @@ var SliderBtn = function (_Component) {
             cursor: 'pointer',
             boxShadow: '0 0 3px rgba(0,0,0,0.1)',
             border: '1px solid #c5c5c5'
-        });
+        };
 
         _this._onStart = function (e) {
             if (_this.ifMobile) {
@@ -121,8 +121,8 @@ var SliderBtn = function (_Component) {
         value: function render() {
             return _react2.default.createElement(
                 'div',
-                { style: this.sliderStyle },
-                _react2.default.createElement('span', { style: Object.assign({}, this.sliderBtnStyle, { left: this.state.relX + '%' })
+                { style: _extends({}, this.sliderStyle) },
+                _react2.default.createElement('span', { style: _extends({}, this.sliderBtnStyle, { left: this.state.relX + '%' })
                 })
             );
         }
@@ -141,19 +141,19 @@ var AvatarImageCropper = function (_Component2) {
 
         _this2.color = _this2.props.isBack ? '#ffffff' : 'rgba(148,148,148,1)';
         _this2.ifMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        _this2.iconStyle = Object.assign({
+        _this2.iconStyle = {
             display: 'inline-block',
             color: _this2.color,
             fill: 'currentcolor',
             height: 32,
             width: 32,
             userSelect: 'none'
-        }, _this2.props.iconStyle);
-        _this2.textStyle = Object.assign({
+        };
+        _this2.textStyle = {
             color: _this2.color,
             fontSize: '18px'
-        }, _this2.props.textStyle);
-        _this2.rootStyle = Object.assign({
+        };
+        _this2.rootStyle = {
             textAlign: 'center',
             height: '100%',
             display: 'flex',
@@ -161,19 +161,20 @@ var AvatarImageCropper = function (_Component2) {
             justifyContent: 'center',
             position: 'relative',
             overflow: 'hidden'
-        }, _this2.props.rootStyle);
-        _this2.inputStyle = Object.assign({
+        };
+        _this2.inputStyle = {
             position: 'absolute',
             top: 0,
             bottom: 0,
             right: 0,
             left: 0,
             opacity: 0,
+            height: '100%',
             zIndex: 8,
             width: '100%',
             cursor: 'pointer'
-        });
-        _this2.previewStyle = Object.assign({
+        };
+        _this2.previewStyle = {
             position: 'absolute',
             top: 0,
             bottom: 0,
@@ -183,22 +184,22 @@ var AvatarImageCropper = function (_Component2) {
             backgroundRepeat: 'no-repeat',
             cursor: 'move',
             backgroundPosition: '0% 0%'
-        });
-        _this2.cropStyle = Object.assign({
+        };
+        _this2.cropStyle = {
             height: '100%',
             width: '100%',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: 'rgba(0,0,0,0.5)'
-        });
-        _this2.avatarStyle = Object.assign({
+        };
+        _this2.avatarStyle = {
             height: '100%',
             display: 'block',
             position: 'relative',
             backgroundColor: _this2.props.isBack ? 'rgba(0,0,0,0.4)' : 'transparent'
-        }, _this2.props.avatarStyle);
-        _this2.sliderConStyle = Object.assign({
+        };
+        _this2.sliderConStyle = {
             position: 'absolute',
             top: '100%',
             right: 0,
@@ -207,14 +208,14 @@ var AvatarImageCropper = function (_Component2) {
             backgroundColor: '#222',
             display: 'flex',
             justifyContent: 'center'
-        }, _this2.props.sliderConStyle);
-        _this2.sliderChildrenDiv = Object.assign({
+        };
+        _this2.sliderChildrenDiv = {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             maxWidth: '600px',
             width: '100%'
-        }, _this2.props.sliderChildrenDiv);
+        };
         _this2.btnStyle = {
             display: 'inline-block',
             fontSize: '14px',
@@ -227,16 +228,16 @@ var AvatarImageCropper = function (_Component2) {
             borderRadius: '4px',
             margin: '5px'
         };
-        _this2.cancelBtnStyle = Object.assign({}, _this2.btnStyle, {
+        _this2.cancelBtnStyle = _extends({}, _this2.btnStyle, {
             color: '#333',
             backgroundColor: '#fff',
             borderColor: '#ccc'
-        }, _this2.props.cancelBtnStyle);
-        _this2.applyBtnStyle = Object.assign({}, _this2.btnStyle, {
+        });
+        _this2.applyBtnStyle = _extends({}, _this2.btnStyle, {
             color: '#fff',
             backgroundColor: '#5cb85c',
             borderColor: '#4cae4c'
-        }, _this2.props.applyBtnStyle);
+        });
         _this2.ele = null;
         _this2.filename = '';
         _this2.avatar2D = {
@@ -460,23 +461,23 @@ var AvatarImageCropper = function (_Component2) {
             return _react2.default.createElement(
                 'avatar-image',
                 { 'class': this.props.className,
-                    style: this.avatarStyle },
+                    style: _extends({}, this.avatarStyle, this.props.avatarStyle) },
                 _react2.default.createElement(
                     'div',
-                    { style: this.rootStyle },
+                    { style: _extends({}, this.rootStyle, this.props.rootStyle) },
                     _react2.default.createElement(
                         'div',
                         null,
                         this.props.icon ? this.props.icon : _react2.default.createElement(
                             'svg',
-                            { viewBox: '0 0 24 24', style: this.iconStyle },
+                            { viewBox: '0 0 24 24', style: _extends({}, this.iconStyle, this.props.iconStyle) },
                             _react2.default.createElement('circle', { cx: '12', cy: '12', r: '3.2' }),
                             _react2.default.createElement('path', {
                                 d: 'M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z' })
                         ),
                         _react2.default.createElement(
                             'p',
-                            { style: this.textStyle },
+                            { style: _extends({}, this.textStyle, this.props.textStyle) },
                             this.props.text ? this.props.text : 'Upload photo'
                         ),
                         _react2.default.createElement(
@@ -486,7 +487,7 @@ var AvatarImageCropper = function (_Component2) {
                         )
                     ),
                     _react2.default.createElement('input', {
-                        style: this.inputStyle,
+                        style: _extends({}, this.inputStyle),
                         type: 'file',
                         accept: 'image/*',
                         onChange: function onChange(e) {
@@ -498,7 +499,7 @@ var AvatarImageCropper = function (_Component2) {
                         _react2.default.createElement('div', {
                             onMouseDown: this._onMouseDown,
                             onTouchStart: this._onMouseDown,
-                            style: Object.assign({}, this.previewStyle, {
+                            style: _extends({}, this.previewStyle, {
                                 backgroundImage: 'url(' + this.state.preview + ')',
                                 backgroundSize: sizeW + 'px ' + sizeH + 'px',
                                 backgroundPosition: '' + relX + 'px ' + relY + 'px'
@@ -507,10 +508,10 @@ var AvatarImageCropper = function (_Component2) {
                 ),
                 this.state.preview && _react2.default.createElement(
                     'div',
-                    { style: this.sliderConStyle },
+                    { style: _extends({}, this.sliderConStyle, this.props.sliderConStyle) },
                     _react2.default.createElement(
                         'div',
-                        { style: this.sliderChildrenDiv },
+                        { style: _extends({}, this.sliderChildrenDiv, this.props.sliderChildrenDiv) },
                         _react2.default.createElement(
                             'div',
                             { style: { height: '20px', margin: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' } },
@@ -518,10 +519,10 @@ var AvatarImageCropper = function (_Component2) {
                         ),
                         _react2.default.createElement(
                             'div',
-                            { name: 'action-con', style: { display: 'flex' } },
+                            { name: 'action-con', style: { display: 'flex', minWidth: '100px' } },
                             actions ? actions : [_react2.default.createElement(
                                 'button',
-                                { style: this.cancelBtnStyle, key: 0, onClick: this._cancel },
+                                { style: _extends({}, this.cancelBtnStyle, this.props.cancelBtnStyle), key: 0, onClick: this._cancel },
                                 _react2.default.createElement(
                                     'svg',
                                     { fill: '#000000', height: '24', viewBox: '0 0 24 24', width: '24', xmlns: 'http://www.w3.org/2000/svg' },
@@ -530,7 +531,7 @@ var AvatarImageCropper = function (_Component2) {
                                 )
                             ), _react2.default.createElement(
                                 'button',
-                                { style: this.applyBtnStyle, key: 1, onClick: this._apply },
+                                { style: _extends({}, this.applyBtnStyle, this.props.applyBtnStyle), key: 1, onClick: this._apply },
                                 _react2.default.createElement(
                                     'svg',
                                     { fill: '#ffffff', height: '24', viewBox: '0 0 24 24', width: '24', xmlns: 'http://www.w3.org/2000/svg' },
@@ -613,16 +614,14 @@ AvatarImageCropper.propTypes = {
 exports.default = AvatarImageCropper;
 module.exports = exports['default'];
 
-},{"prop-types":9}],2:[function(require,module,exports){
+},{"prop-types":10}],2:[function(require,module,exports){
 "use strict";
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * 
  */
@@ -656,11 +655,9 @@ module.exports = emptyFunction;
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  */
 
@@ -710,15 +707,13 @@ function invariant(condition, format, a, b, c, d, e, f) {
 
 module.exports = invariant;
 }).call(this,require('_process'))
-},{"_process":5}],4:[function(require,module,exports){
+},{"_process":6}],4:[function(require,module,exports){
 (function (process){
 /**
- * Copyright 2014-2015, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2014-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  */
 
@@ -736,50 +731,140 @@ var emptyFunction = require('./emptyFunction');
 var warning = emptyFunction;
 
 if (process.env.NODE_ENV !== 'production') {
-  (function () {
-    var printWarning = function printWarning(format) {
-      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
+  var printWarning = function printWarning(format) {
+    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    var argIndex = 0;
+    var message = 'Warning: ' + format.replace(/%s/g, function () {
+      return args[argIndex++];
+    });
+    if (typeof console !== 'undefined') {
+      console.error(message);
+    }
+    try {
+      // --- Welcome to debugging React ---
+      // This error was thrown as a convenience so that you can use this stack
+      // to find the callsite that caused this warning to fire.
+      throw new Error(message);
+    } catch (x) {}
+  };
+
+  warning = function warning(condition, format) {
+    if (format === undefined) {
+      throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
+    }
+
+    if (format.indexOf('Failed Composite propType: ') === 0) {
+      return; // Ignore CompositeComponent proptype check.
+    }
+
+    if (!condition) {
+      for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+        args[_key2 - 2] = arguments[_key2];
       }
 
-      var argIndex = 0;
-      var message = 'Warning: ' + format.replace(/%s/g, function () {
-        return args[argIndex++];
-      });
-      if (typeof console !== 'undefined') {
-        console.error(message);
-      }
-      try {
-        // --- Welcome to debugging React ---
-        // This error was thrown as a convenience so that you can use this stack
-        // to find the callsite that caused this warning to fire.
-        throw new Error(message);
-      } catch (x) {}
-    };
-
-    warning = function warning(condition, format) {
-      if (format === undefined) {
-        throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
-      }
-
-      if (format.indexOf('Failed Composite propType: ') === 0) {
-        return; // Ignore CompositeComponent proptype check.
-      }
-
-      if (!condition) {
-        for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
-          args[_key2 - 2] = arguments[_key2];
-        }
-
-        printWarning.apply(undefined, [format].concat(args));
-      }
-    };
-  })();
+      printWarning.apply(undefined, [format].concat(args));
+    }
+  };
 }
 
 module.exports = warning;
 }).call(this,require('_process'))
-},{"./emptyFunction":2,"_process":5}],5:[function(require,module,exports){
+},{"./emptyFunction":2,"_process":6}],5:[function(require,module,exports){
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
+
+'use strict';
+/* eslint-disable no-unused-vars */
+var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+function toObject(val) {
+	if (val === null || val === undefined) {
+		throw new TypeError('Object.assign cannot be called with null or undefined');
+	}
+
+	return Object(val);
+}
+
+function shouldUseNative() {
+	try {
+		if (!Object.assign) {
+			return false;
+		}
+
+		// Detect buggy property enumeration order in older V8 versions.
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+		var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
+		test1[5] = 'de';
+		if (Object.getOwnPropertyNames(test1)[0] === '5') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test2 = {};
+		for (var i = 0; i < 10; i++) {
+			test2['_' + String.fromCharCode(i)] = i;
+		}
+		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+			return test2[n];
+		});
+		if (order2.join('') !== '0123456789') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test3 = {};
+		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+			test3[letter] = letter;
+		});
+		if (Object.keys(Object.assign({}, test3)).join('') !==
+				'abcdefghijklmnopqrst') {
+			return false;
+		}
+
+		return true;
+	} catch (err) {
+		// We don't expect any of the above to throw, but better to be safe.
+		return false;
+	}
+}
+
+module.exports = shouldUseNative() ? Object.assign : function (target, source) {
+	var from;
+	var to = toObject(target);
+	var symbols;
+
+	for (var s = 1; s < arguments.length; s++) {
+		from = Object(arguments[s]);
+
+		for (var key in from) {
+			if (hasOwnProperty.call(from, key)) {
+				to[key] = from[key];
+			}
+		}
+
+		if (getOwnPropertySymbols) {
+			symbols = getOwnPropertySymbols(from);
+			for (var i = 0; i < symbols.length; i++) {
+				if (propIsEnumerable.call(from, symbols[i])) {
+					to[symbols[i]] = from[symbols[i]];
+				}
+			}
+		}
+	}
+
+	return to;
+};
+
+},{}],6:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -965,15 +1050,13 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 (function (process){
 /**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2013-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 'use strict';
@@ -1007,7 +1090,7 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
         try {
           // This is intentionally an invariant that gets caught. It's the same
           // behavior as without this statement except with a better message.
-          invariant(typeof typeSpecs[typeSpecName] === 'function', '%s: %s type `%s` is invalid; it must be a function, usually from ' + 'React.PropTypes.', componentName || 'React class', location, typeSpecName);
+          invariant(typeof typeSpecs[typeSpecName] === 'function', '%s: %s type `%s` is invalid; it must be a function, usually from ' + 'the `prop-types` package, but received `%s`.', componentName || 'React class', location, typeSpecName, typeof typeSpecs[typeSpecName]);
           error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret);
         } catch (ex) {
           error = ex;
@@ -1030,25 +1113,26 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
 module.exports = checkPropTypes;
 
 }).call(this,require('_process'))
-},{"./lib/ReactPropTypesSecret":10,"_process":5,"fbjs/lib/invariant":3,"fbjs/lib/warning":4}],7:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":11,"_process":6,"fbjs/lib/invariant":3,"fbjs/lib/warning":4}],8:[function(require,module,exports){
 /**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2013-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 'use strict';
 
 var emptyFunction = require('fbjs/lib/emptyFunction');
 var invariant = require('fbjs/lib/invariant');
+var ReactPropTypesSecret = require('./lib/ReactPropTypesSecret');
 
 module.exports = function() {
-  // Important!
-  // Keep this list in sync with production version in `./factoryWithTypeCheckers.js`.
-  function shim() {
+  function shim(props, propName, componentName, location, propFullName, secret) {
+    if (secret === ReactPropTypesSecret) {
+      // It is still safe when called from React.
+      return;
+    }
     invariant(
       false,
       'Calling PropTypes validators directly is not supported by the `prop-types` package. ' +
@@ -1060,6 +1144,8 @@ module.exports = function() {
   function getShim() {
     return shim;
   };
+  // Important!
+  // Keep this list in sync with production version in `./factoryWithTypeCheckers.js`.
   var ReactPropTypes = {
     array: shim,
     bool: shim,
@@ -1077,7 +1163,8 @@ module.exports = function() {
     objectOf: getShim,
     oneOf: getShim,
     oneOfType: getShim,
-    shape: getShim
+    shape: getShim,
+    exact: getShim
   };
 
   ReactPropTypes.checkPropTypes = emptyFunction;
@@ -1086,15 +1173,13 @@ module.exports = function() {
   return ReactPropTypes;
 };
 
-},{"fbjs/lib/emptyFunction":2,"fbjs/lib/invariant":3}],8:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":11,"fbjs/lib/emptyFunction":2,"fbjs/lib/invariant":3}],9:[function(require,module,exports){
 (function (process){
 /**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2013-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 'use strict';
@@ -1102,6 +1187,7 @@ module.exports = function() {
 var emptyFunction = require('fbjs/lib/emptyFunction');
 var invariant = require('fbjs/lib/invariant');
 var warning = require('fbjs/lib/warning');
+var assign = require('object-assign');
 
 var ReactPropTypesSecret = require('./lib/ReactPropTypesSecret');
 var checkPropTypes = require('./checkPropTypes');
@@ -1200,7 +1286,8 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
     objectOf: createObjectOfTypeChecker,
     oneOf: createEnumTypeChecker,
     oneOfType: createUnionTypeChecker,
-    shape: createShapeTypeChecker
+    shape: createShapeTypeChecker,
+    exact: createStrictShapeTypeChecker,
   };
 
   /**
@@ -1415,7 +1502,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
       if (typeof checker !== 'function') {
         warning(
           false,
-          'Invalid argument supplid to oneOfType. Expected an array of check functions, but ' +
+          'Invalid argument supplied to oneOfType. Expected an array of check functions, but ' +
           'received %s at index %s.',
           getPostfixForTypeWarning(checker),
           i
@@ -1466,6 +1553,36 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
       }
       return null;
     }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createStrictShapeTypeChecker(shapeTypes) {
+    function validate(props, propName, componentName, location, propFullName) {
+      var propValue = props[propName];
+      var propType = getPropType(propValue);
+      if (propType !== 'object') {
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
+      }
+      // We need to check all keys in case some are required but missing from
+      // props.
+      var allKeys = assign({}, props[propName], shapeTypes);
+      for (var key in allKeys) {
+        var checker = shapeTypes[key];
+        if (!checker) {
+          return new PropTypeError(
+            'Invalid ' + location + ' `' + propFullName + '` key `' + key + '` supplied to `' + componentName + '`.' +
+            '\nBad object: ' + JSON.stringify(props[propName], null, '  ') +
+            '\nValid keys: ' +  JSON.stringify(Object.keys(shapeTypes), null, '  ')
+          );
+        }
+        var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
+        if (error) {
+          return error;
+        }
+      }
+      return null;
+    }
+
     return createChainableTypeChecker(validate);
   }
 
@@ -1602,15 +1719,13 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
 };
 
 }).call(this,require('_process'))
-},{"./checkPropTypes":6,"./lib/ReactPropTypesSecret":10,"_process":5,"fbjs/lib/emptyFunction":2,"fbjs/lib/invariant":3,"fbjs/lib/warning":4}],9:[function(require,module,exports){
+},{"./checkPropTypes":7,"./lib/ReactPropTypesSecret":11,"_process":6,"fbjs/lib/emptyFunction":2,"fbjs/lib/invariant":3,"fbjs/lib/warning":4,"object-assign":5}],10:[function(require,module,exports){
 (function (process){
 /**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2013-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 if (process.env.NODE_ENV !== 'production') {
@@ -1636,14 +1751,12 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./factoryWithThrowingShims":7,"./factoryWithTypeCheckers":8,"_process":5}],10:[function(require,module,exports){
+},{"./factoryWithThrowingShims":8,"./factoryWithTypeCheckers":9,"_process":6}],11:[function(require,module,exports){
 /**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2013-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 'use strict';
