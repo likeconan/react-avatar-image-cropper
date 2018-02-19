@@ -470,17 +470,21 @@ var AvatarImageCropper = function (_Component2) {
                     _react2.default.createElement(
                         'div',
                         null,
-                        this.props.icon ? this.props.icon : _react2.default.createElement(
-                            'svg',
-                            { viewBox: '0 0 24 24', style: _extends({}, this.iconStyle, this.props.iconStyle) },
-                            _react2.default.createElement('circle', { cx: '12', cy: '12', r: '3.2' }),
-                            _react2.default.createElement('path', {
-                                d: 'M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z' })
-                        ),
-                        _react2.default.createElement(
-                            'p',
-                            { style: _extends({}, this.textStyle, this.props.textStyle) },
-                            this.props.text ? this.props.text : 'Upload photo'
+                        !this.props.noWaterMark && _react2.default.createElement(
+                            'div',
+                            null,
+                            this.props.icon ? this.props.icon : _react2.default.createElement(
+                                'svg',
+                                { viewBox: '0 0 24 24', style: _extends({}, this.iconStyle, this.props.iconStyle) },
+                                _react2.default.createElement('circle', { cx: '12', cy: '12', r: '3.2' }),
+                                _react2.default.createElement('path', {
+                                    d: 'M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z' })
+                            ),
+                            _react2.default.createElement(
+                                'p',
+                                { style: _extends({}, this.textStyle, this.props.textStyle) },
+                                this.props.text ? this.props.text : 'Upload photo'
+                            )
                         ),
                         _react2.default.createElement(
                             'p',
@@ -568,9 +572,13 @@ var AvatarImageCropper = function (_Component2) {
 
 AvatarImageCropper.propTypes = {
     /**
-     * Should be used to pass `icon` components.
+     * Should be used to determine if has background.
      */
     isBack: _propTypes2.default.bool,
+    /**
+     * Should be used to determine if has water mark.
+     */
+    noWaterMark: _propTypes2.default.bool,
     /**
      * Should be used to pass `icon` components.
      */
