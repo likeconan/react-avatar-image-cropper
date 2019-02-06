@@ -75,7 +75,7 @@ errorHandler = (type) => {
 
 when there is a background image in container, pass true to change the avatar background and text color
 
-### text(optional, string, default:Upload photo)
+### text(optional, string or react component, default:Upload photo)
 
 replace the initial text.
 
@@ -92,11 +92,6 @@ const actions = [
     <AvatarImageCr apply={this.apply} actions={actions} />
 ```
 
-### errorHandler(optional, function)
-
-You can set errorHandler to display error messages when the file is not a image or the size is too big.
-
-
 ### icon(optional, react component)
 
 replace the initial display of icon.
@@ -112,6 +107,10 @@ const icon = (
 
 <AvatarImageCr apply={this.apply} icon={icon}/>
 ```
+
+### loadingNode(optional, react component)
+
+replace the initial display of loading component.
 
 ### maxsize(optional, number)
 

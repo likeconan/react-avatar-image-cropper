@@ -105,11 +105,15 @@ class AvatarImageCropper extends Component {
         /**
          * Should be used to pass `icon` components.
          */
-        icon: PropTypes.node,
+        icon: PropTypes.element,
         /**
-        * Should be used to pass text.
+        * Should be used to pass loading component.
         */
-        text: PropTypes.string,
+        loadingNode: PropTypes.element,
+        /**
+        * Should be used to pass text or component.
+        */
+        text: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
         /**
          * Should be used to pass `actions` array of components.
          */
@@ -164,6 +168,7 @@ class AvatarImageCropper extends Component {
         super(props);
         this.state = {
             preview: null,
+            loading: false,
             x: 0,
             y: 0,
             relX: 0,
@@ -316,6 +321,94 @@ class AvatarImageCropper extends Component {
         }
     }
 
+    resetOrientation = (file) => {
+        return new Promise((resolve, reject) => {
+            const getOrientation = () => {
+                return new Promise((resolve) => {
+                    var reader = new FileReader();
+                    reader.onload = function (event) {
+                        var view = new DataView(event.target.result);
+
+                        if (view.getUint16(0, false) != 0xFFD8) return resolve(-2);
+
+                        var length = view.byteLength,
+                            offset = 2;
+
+                        while (offset < length) {
+                            var marker = view.getUint16(offset, false);
+                            offset += 2;
+
+                            if (marker == 0xFFE1) {
+                                if (view.getUint32(offset += 2, false) != 0x45786966) {
+                                    return resolve(-1);
+                                }
+                                var little = view.getUint16(offset += 6, false) == 0x4949;
+                                offset += view.getUint32(offset + 4, little);
+                                var tags = view.getUint16(offset, little);
+                                offset += 2;
+
+                                for (var i = 0; i < tags; i++)
+                                    if (view.getUint16(offset + (i * 12), little) == 0x0112)
+                                        return resolve(view.getUint16(offset + (i * 12) + 8, little));
+                            }
+                            else if ((marker & 0xFF00) != 0xFF00) break;
+                            else offset += view.getUint16(offset, false);
+                        }
+                        return resolve(-1);
+                    };
+                    reader.readAsArrayBuffer(file.slice(0, 64 * 1024));
+                })
+            }
+            const reset = (or) => {
+                return new Promise((resolve) => {
+                    if (or === 1) {
+                        return resolve(file);
+                    }
+                    var src = window.URL.createObjectURL(file);
+                    var img = new Image();
+                    img.src = src;
+                    img.onload = () => {
+                        var width = img.width,
+                            height = img.height,
+                            canvas = document.createElement('canvas'),
+                            ctx = canvas.getContext("2d");
+                        if (4 < or && or < 9) {
+                            canvas.width = height;
+                            canvas.height = width;
+                        } else {
+                            canvas.width = width;
+                            canvas.height = height;
+                        }
+
+                        // transform context before drawing image
+                        switch (or) {
+                            case 2: ctx.transform(-1, 0, 0, 1, width, 0); break;
+                            case 3: ctx.transform(-1, 0, 0, -1, width, height); break;
+                            case 4: ctx.transform(1, 0, 0, -1, 0, height); break;
+                            case 5: ctx.transform(0, 1, 1, 0, 0, 0); break;
+                            case 6: ctx.transform(0, 1, -1, 0, height, 0); break;
+                            case 7: ctx.transform(0, -1, -1, 0, height, width); break;
+                            case 8: ctx.transform(0, -1, 1, 0, 0, width); break;
+                            default: break;
+                        }
+
+                        // draw image
+                        ctx.drawImage(img, 0, 0);
+                        canvas.toBlob((blob) => {
+                            blob.name = file.name;
+                            resolve(blob);
+                        })
+                    }
+                })
+            }
+            Promise.resolve()
+                .then(getOrientation)
+                .then(reset)
+                .then(resolve)
+                .catch(reject)
+        })
+    }
+
     onDrop = (evt) => {
         var fileList = evt.target.files
         var acceptedFiles = [];
@@ -329,30 +422,49 @@ class AvatarImageCropper extends Component {
         var ifImage = file.type.indexOf('png') >= 0 || file.type.indexOf('jpg') >= 0 || file.type.indexOf('jpeg') >= 0;
 
         if (ifImage && file.size <= maxsize) {
-            acceptedFiles.push(file);
-            var src = window.URL.createObjectURL(file);
-            var img = new Image();
-            img.src = src;
-            img.onload = () => {
-                this.img = img;
-                this.img2D.width = img.width;
-                this.img2D.height = img.height;
-                this.img2D.ratio = img.width / img.height;
-                var sizeW = this.img2D.ratio >= 1 ? this.avatar2D.height * this.img2D.ratio : this.avatar2D.width;
-                sizeW = sizeW < this.avatar2D.width ? this.avatar2D.width : sizeW
-                var sizeH = sizeW / this.img2D.ratio;
-                this.setState({
-                    sizeW: Math.ceil(sizeW),
-                    sizeH: sizeH,
-                    errorMsg: ''
-                })
-                this.origin = {
-                    width: sizeW,
-                    height: sizeH
-                }
-            };
+            this.setState({
+                loading: true
+            });
+            this.resetOrientation(file).then((file) => {
+                acceptedFiles.push(file);
+                var src = window.URL.createObjectURL(file);
+                var img = new Image();
+                img.src = src;
+                img.onload = () => {
+                    this.img = img;
+                    this.img2D.width = img.width;
+                    this.img2D.height = img.height;
+                    this.img2D.ratio = img.width / img.height;
+                    var sizeW = this.img2D.ratio >= 1 ? this.avatar2D.height * this.img2D.ratio : this.avatar2D.width;
+                    sizeW = sizeW < this.avatar2D.width ? this.avatar2D.width : sizeW
+                    var sizeH = sizeW / this.img2D.ratio;
+                    this.setState({
+                        sizeW: Math.ceil(sizeW),
+                        sizeH: sizeH,
+                        errorMsg: '',
+                        loading: false
+                    })
+                    this.origin = {
+                        width: sizeW,
+                        height: sizeH
+                    }
+                };
+                file.preview = src;
 
-            file.preview = src;
+                if (acceptedFiles.length) {
+                    this.filename = acceptedFiles[0].name;
+                    this.setState({ preview: acceptedFiles[0].preview })
+                    if (this.props.onDrop) {
+                        this
+                            .props
+                            .onDrop(acceptedFiles[0]);
+                    }
+                }
+            }).catch(() => {
+                this.setState({
+                    loading: false
+                });
+            })
         } else if (!ifImage) {
             if (this.props.errorHandler) {
                 this.props.errorHandler('not_image')
@@ -370,17 +482,6 @@ class AvatarImageCropper extends Component {
                 this.setState({
                     errorMsg: 'The size of image is too large'
                 })
-            }
-        }
-
-        if (acceptedFiles.length) {
-            this.filename = acceptedFiles[0].name;
-            this.setState({ preview: acceptedFiles[0].preview })
-
-            if (this.props.onDrop) {
-                this
-                    .props
-                    .onDrop(acceptedFiles[0]);
             }
         }
 
@@ -502,28 +603,32 @@ class AvatarImageCropper extends Component {
             <avatar-image class={this.props.className}
                 style={{ ...this.avatarStyle, ...this.props.avatarStyle }}>
                 <div style={{ ...this.rootStyle, ...this.props.rootStyle }}>
-                    <div>
-                        {
-                            !this.props.noWaterMark &&
+                    {
+                        this.state.loading ?
+                            this.props.loadingNode ? this.props.loadingNode
+                                : <div>Loading...</div>
+                            :
                             <div>
-                                {this.props.icon
-                                    ? this.props.icon
-                                    :
-                                    (
-                                        <svg viewBox="0 0 24 24" style={{ ...this.iconStyle, ...this.props.iconStyle }}>
-                                            <circle cx="12" cy="12" r="3.2"></circle>
-                                            <path
-                                                d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"></path>
-                                        </svg>
-                                    )
+                                {
+                                    !this.props.noWaterMark &&
+                                    <div>
+                                        {this.props.icon
+                                            ? this.props.icon
+                                            :
+                                            (
+                                                <svg viewBox="0 0 24 24" style={{ ...this.iconStyle, ...this.props.iconStyle }}>
+                                                    <circle cx="12" cy="12" r="3.2"></circle>
+                                                    <path
+                                                        d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"></path>
+                                                </svg>
+                                            )
+                                        }
+                                        <div style={{ ...this.textStyle, ...this.props.textStyle }}>{this.props.text ? this.props.text : 'Upload photo'}</div>
+                                    </div>
                                 }
-                                <p style={{ ...this.textStyle, ...this.props.textStyle }}>{this.props.text ? this.props.text : 'Upload photo'}</p>
+                                <p style={{ color: 'red' }}>{this.state.errorMsg}</p>
                             </div>
-                        }
-
-
-                        <p style={{ color: 'red' }}>{this.state.errorMsg}</p>
-                    </div>
+                    }
                     <input
                         style={{ ...this.inputStyle }}
                         type='file'
@@ -547,10 +652,8 @@ class AvatarImageCropper extends Component {
                                 </div>
 
                             </div>
-
                         )
                     }
-
                 </div>
                 {
                     this.state.preview &&
@@ -724,6 +827,3 @@ class AvatarImageCropper extends Component {
 
 
 export default AvatarImageCropper;
-
-
-
