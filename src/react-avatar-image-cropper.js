@@ -84,8 +84,8 @@ class SliderBtn extends Component {
 
     render() {
         return (
-            <div style={{ ...this.sliderStyle }}>
-                <span style={{ ...this.sliderBtnStyle, left: this.state.relX + '%' }}
+            <div style={{ ...this.sliderStyle, ...this.props.sliderStyle }}>
+                <span style={{ ...this.sliderBtnStyle, ...this.props.sliderBtnStyle, left: this.state.relX + '%' }}
                 ></span>
             </div>
         );
@@ -142,6 +142,22 @@ class AvatarImageCropper extends Component {
          * Override the inline-styles of the slider conatiner.
          */
         sliderConStyle: PropTypes.object,
+        /**
+         * Override the inline-styles of the slider conatiner children div.
+         */
+        sliderChildrenDiv: PropTypes.object,
+        /**
+         * Override the inline-styles of the slider div.
+         */
+        sliderDivStyle: PropTypes.object,
+        /**
+         * Override the inline-styles of the slider.
+         */
+        sliderStyle: PropTypes.object,
+        /**
+         * Override the inline-styles of the slider drag button.
+         */
+        sliderBtnStyle: PropTypes.object,
         /**
         * Override the inline-styles of the cancel button.
         */
@@ -265,6 +281,7 @@ class AvatarImageCropper extends Component {
         maxWidth: '600px',
         width: '100%'
     }
+    sliderDiv = { height: '20px', margin: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }
 
     btnStyle = {
         display: 'inline-block',
@@ -660,8 +677,8 @@ class AvatarImageCropper extends Component {
                     (
                         <div style={{ ...this.sliderConStyle, ...this.props.sliderConStyle }}>
                             <div style={{ ...this.sliderChildrenDiv, ...this.props.sliderChildrenDiv }}>
-                                <div style={{ height: '20px', margin: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-                                    <SliderBtn resize={this._resize} />
+                                <div style={{ ...sliderDiv, ...this.props.sliderDiv }}>
+                                    <SliderBtn sliderBtnStyle={this.props.sliderBtnStyle} sliderStyle={this.props.sliderStyle} resize={this._resize} />
                                 </div>
                                 <div name='action-con' style={{ display: 'flex', minWidth: '100px' }}>
                                     {

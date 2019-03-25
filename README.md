@@ -145,6 +145,11 @@ set the root element  style
 
 set the container of slider style
 
+### sliderChildrenDiv(optional, object)
+
+set the container div of slider style
+
+
 
 ### cancelBtnStyle(optional, object)
 
