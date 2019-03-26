@@ -440,7 +440,11 @@ class AvatarImageCropper extends Component {
 
         if (ifImage && file.size <= maxsize) {
             this.setState({
-                loading: true
+                loading: true,
+                x: 0,
+                y: 0,
+                relX: 0,
+                relY: 0,
             });
             this.resetOrientation(file).then((file) => {
                 acceptedFiles.push(file);
@@ -448,6 +452,7 @@ class AvatarImageCropper extends Component {
                 var img = new Image();
                 img.src = src;
                 img.onload = () => {
+                    debugger
                     this.img = img;
                     this.img2D.width = img.width;
                     this.img2D.height = img.height;
