@@ -682,7 +682,7 @@ class AvatarImageCropper extends Component {
                     (
                         <div style={{ ...this.sliderConStyle, ...this.props.sliderConStyle }}>
                             <div style={{ ...this.sliderChildrenDiv, ...this.props.sliderChildrenDiv }}>
-                                <div style={{ ...this.sliderDiv, ...this.props.sliderDiv }}>
+                                <div style={{ ...this.sliderDiv, ...this.props.sliderDivStyle }}>
                                     <SliderBtn sliderBtnStyle={this.props.sliderBtnStyle} sliderStyle={this.props.sliderStyle} resize={this._resize} />
                                 </div>
                                 <div name='action-con' style={{ display: 'flex', minWidth: '100px' }}>
