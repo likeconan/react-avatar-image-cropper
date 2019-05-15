@@ -629,7 +629,7 @@ var AvatarImageCropper = function (_Component2) {
                         { style: _extends({}, this.sliderChildrenDiv, this.props.sliderChildrenDiv) },
                         _react2.default.createElement(
                             'div',
-                            { style: _extends({}, this.sliderDiv, this.props.sliderDiv) },
+                            { style: _extends({}, this.sliderDiv, this.props.sliderDivStyle) },
                             _react2.default.createElement(SliderBtn, { sliderBtnStyle: this.props.sliderBtnStyle, sliderStyle: this.props.sliderStyle, resize: this._resize })
                         ),
                         _react2.default.createElement(
