@@ -1,11 +1,11 @@
 {
   "name": "react-avatar-image-cropper",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "This is a light library without any dependencies for cropping image for avatar",
   "main": "./lib/react-avatar-image-cropper.js",
   "scripts": {
     "build": "babel ./src --out-dir ./lib --source-maps --presets es2015,react,stage-0 ",
-    "prepublish": "babel ./src --out-dir ./lib --source-maps --presets es2015,react,stage-0 --plugins babel-plugin-add-module-exports && browserify ./lib/react-avatar-image-cropper.js   -o ./dist/avatar-image-cropper.js --transform browserify-global-shim --standalone AvatarImageCropper &&   uglifyjs ./dist/avatar-image-cropper.js --compress --mangle --output ./dist/avatar-image-cropper.min.js --source-map ./dist/avatar-image-cropper.min.js.map",
+    "prepublish": "babel ./src --out-dir ./lib --source-maps --presets es2015,react,stage-0 --plugins babel-plugin-add-module-exports && browserify ./lib/react-avatar-image-cropper.js   -o ./dist/avatar-image-cropper.js --transform browserify-global-shim --standalone AvatarImageCropper &&  uglifyjs ./dist/avatar-image-cropper.js -o ./dist/avatar-image-cropper.min.js -c -m",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "browserify-global-shim": {
