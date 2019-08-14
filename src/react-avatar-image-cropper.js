@@ -452,7 +452,6 @@ class AvatarImageCropper extends Component {
                 var img = new Image();
                 img.src = src;
                 img.onload = () => {
-                    debugger
                     this.img = img;
                     this.img2D.width = img.width;
                     this.img2D.height = img.height;
