@@ -168,3 +168,6 @@ To view the demo or develop,open the demo directory and under it,
 
 you can open localhost:8080 in a browser to try.
 
+# License
+
+MIT
