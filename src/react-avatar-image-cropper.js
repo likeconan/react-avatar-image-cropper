@@ -11,13 +11,12 @@ class SliderBtn extends Component {
     }
 
     componentDidMount() {
-        var ele = ReactDOM.findDOMNode(this);
-        this.sliderW = ele.offsetWidth;
-        this.offsetLeft = ele.getBoundingClientRect().left
+        this.sliderW = this.ele.offsetWidth;
+        this.offsetLeft = this.ele.getBoundingClientRect().left
         if (this.ifMobile) {
-            ele.children[0].addEventListener('touchstart', this._onStart)
+            this.ele.children[0].addEventListener('touchstart', this._onStart)
         } else {
-            ele.children[0].addEventListener('mousedown', this._onStart)
+            this.ele.children[0].addEventListener('mousedown', this._onStart)
         }
     }
 
@@ -84,7 +83,7 @@ class SliderBtn extends Component {
 
     render() {
         return (
-            <div style={{ ...this.sliderStyle, ...this.props.sliderStyle }}>
+            <div ref={ele => this.ele = ele} style={{ ...this.sliderStyle, ...this.props.sliderStyle }}>
                 <span style={{ ...this.sliderBtnStyle, ...this.props.sliderBtnStyle, left: this.state.relX + '%' }}
                 ></span>
             </div>
@@ -330,7 +329,6 @@ class AvatarImageCropper extends Component {
 
 
     componentDidMount() {
-        this.ele = ReactDOM.findDOMNode(this);
         this.avatar2D.width = this.ele.offsetWidth;
         this.avatar2D.height = this.ele.offsetHeight;
         if (this.avatar2D.width < 200) {
@@ -621,7 +619,7 @@ class AvatarImageCropper extends Component {
             :
             null
         return (
-            <avatar-image class={this.props.className}
+            <avatar-image ref={node => this.ele = node} class={this.props.className}
                 style={{ ...this.avatarStyle, ...this.props.avatarStyle }}>
                 <div style={{ ...this.rootStyle, ...this.props.rootStyle }}>
                     {
