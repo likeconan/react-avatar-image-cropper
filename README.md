@@ -134,6 +134,10 @@ set the initial icon style
 
 set the initial text style
 
+### errorStyle(optional, object)
+
+set the error text style
+
 
 ### rootStyle(optional, object)
 

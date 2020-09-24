@@ -134,6 +134,10 @@ class AvatarImageCropper extends Component {
          */
         textStyle: PropTypes.object,
         /**
+         * Override the inline-styles of the error text style.
+         */
+        errorStyle: PropTypes.object,
+        /**
          * Override the inline-styles of the root element.
          */
         rootStyle: PropTypes.object,
@@ -645,7 +649,7 @@ class AvatarImageCropper extends Component {
                                         <div style={{ ...this.textStyle, ...this.props.textStyle }}>{this.props.text ? this.props.text : 'Upload photo'}</div>
                                     </div>
                                 }
-                                <p style={{ color: 'red' }}>{this.state.errorMsg}</p>
+                                {this.state.errorMsg && <p style={{ color: 'red', ...this.props.errorStyle }}>{this.state.errorMsg}</p>}
                             </div>
                     }
                     <input

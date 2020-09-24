@@ -598,9 +598,9 @@ var AvatarImageCropper = function (_Component2) {
                                 this.props.text ? this.props.text : 'Upload photo'
                             )
                         ),
-                        _react2.default.createElement(
+                        this.state.errorMsg && _react2.default.createElement(
                             'p',
-                            { style: { color: 'red' } },
+                            { style: _extends({ color: 'red' }, this.props.errorStyle) },
                             this.state.errorMsg
                         )
                     ),
@@ -723,6 +723,10 @@ AvatarImageCropper.propTypes = {
      * Override the inline-styles of the initial text style.
      */
     textStyle: _propTypes2.default.object,
+    /**
+     * Override the inline-styles of the error text style.
+     */
+    errorStyle: _propTypes2.default.object,
     /**
      * Override the inline-styles of the root element.
      */
