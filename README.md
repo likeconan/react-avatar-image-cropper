@@ -16,15 +16,13 @@ Both working for web and mobile.
 Include the main js module, e.g:
 
 ```js
-var AvatarImageCropper = require('react-avatar-image-cropper');
-//or es6:
 import AvatarImageCropper from 'react-avatar-image-cropper';
 
 ```
 also you can implement the library as external js, add the script in build directory like below:
 
 ```js
-<script src="/dist/avatar-image-cropper.min.js"></script>
+<script src="/dist/index.js"></script>
 ```
 you will get the AvatarImageCropper in window object.
 
