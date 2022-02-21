@@ -737,10 +737,9 @@ class AvatarImageCropper extends React.Component {
                 onTouchStart={this._onMouseDown}
                 style={{
                   ...this.previewStyle,
-              
                   backgroundImage: 'url(' + this.state.preview + ')',
                   backgroundSize: sizeW + 'px ' + sizeH + 'px',
-                  backgroundPosition: '' + relX + 'px ' + relY + 'px',
+                  backgroundPosition: '' + relX + 'px ' + relY + 'px'
                 }}
               />
             </div>
