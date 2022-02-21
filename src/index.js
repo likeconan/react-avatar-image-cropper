@@ -284,6 +284,7 @@ class AvatarImageCropper extends React.Component {
     height: '100%',
     display: 'block',
     position: 'relative',
+    borderRadius: this.props.previewBorderRadius,
     backgroundColor: this.props.isBack ? 'rgba(0,0,0,0.4)' : 'transparent'
   }
 
