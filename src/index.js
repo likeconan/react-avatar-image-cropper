@@ -139,6 +139,10 @@ class AvatarImageCropper extends React.Component {
      */
     className: PropTypes.string,
     /**
+     * Border Radius to apply to the preview.
+     */
+    previewBorderRadius: PropTypes.string,
+    /**
      * Override the inline-styles of the initial icon style.
      */
     iconStyle: PropTypes.object,
@@ -254,18 +258,18 @@ class AvatarImageCropper extends React.Component {
     width: '100%',
     cursor: 'pointer'
   }
-
   previewStyle = {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     bottom: 0,
     right: 0,
     left: 0,
     zIndex: 9,
-    backgroundRepeat: 'no-repeat',
-    cursor: 'move',
-    backgroundPosition: '0% 0%'
-  }
+    backgroundRepeat: "no-repeat",
+    cursor: "move",
+    backgroundPosition: "0% 0%",
+    borderRadius: this.props.previewBorderRadius,
+  };
 
   cropStyle = {
     height: '100%',
@@ -280,6 +284,7 @@ class AvatarImageCropper extends React.Component {
     height: '100%',
     display: 'block',
     position: 'relative',
+    borderRadius: this.props.previewBorderRadius,
     backgroundColor: this.props.isBack ? 'rgba(0,0,0,0.4)' : 'transparent'
   }
 
@@ -818,6 +823,7 @@ class AvatarImageCropper extends React.Component {
  */
 
 /* global self */
+
 /* jslint bitwise: true, regexp: true, confusion: true, es5: true, vars: true, white: true,
   plusplus: true */
 
