@@ -370,108 +370,6 @@ class AvatarImageCropper extends React.Component {
     }
   }
 
-  resetOrientation = (file) => {
-    return new Promise((resolve, reject) => {
-      const getOrientation = () => {
-        return new Promise((resolve) => {
-          var reader = new window.FileReader()
-          reader.onload = function (event) {
-            var view = new DataView(event.target.result)
-
-            if (view.getUint16(0, false) !== 0xffd8) return resolve(-2)
-
-            var length = view.byteLength
-            var offset = 2
-
-            while (offset < length) {
-              var marker = view.getUint16(offset, false)
-              offset += 2
-
-              if (marker === 0xffe1) {
-                if (view.getUint32((offset += 2), false) !== 0x45786966) {
-                  return resolve(-1)
-                }
-                var little = view.getUint16((offset += 6), false) === 0x4949
-                offset += view.getUint32(offset + 4, little)
-                var tags = view.getUint16(offset, little)
-                offset += 2
-
-                for (var i = 0; i < tags; i++)
-                  if (view.getUint16(offset + i * 12, little) === 0x0112)
-                    return resolve(view.getUint16(offset + i * 12 + 8, little))
-              } else if ((marker & 0xff00) !== 0xff00) break
-              else offset += view.getUint16(offset, false)
-            }
-            return resolve(-1)
-          }
-          reader.readAsArrayBuffer(file.slice(0, 64 * 1024))
-        })
-      }
-      const reset = (or) => {
-        return new Promise((resolve) => {
-          if (or === 1) {
-            return resolve(file)
-          }
-          var src = window.URL.createObjectURL(file)
-          var img = new window.Image()
-          img.src = src
-          img.onload = () => {
-            var width = img.width
-            var height = img.height
-            var canvas = document.createElement('canvas')
-            var ctx = canvas.getContext('2d')
-            if (or > 4 && or < 9) {
-              canvas.width = height
-              canvas.height = width
-            } else {
-              canvas.width = width
-              canvas.height = height
-            }
-
-            // transform context before drawing image
-            switch (or) {
-              case 2:
-                ctx.transform(-1, 0, 0, 1, width, 0)
-                break
-              case 3:
-                ctx.transform(-1, 0, 0, -1, width, height)
-                break
-              case 4:
-                ctx.transform(1, 0, 0, -1, 0, height)
-                break
-              case 5:
-                ctx.transform(0, 1, 1, 0, 0, 0)
-                break
-              case 6:
-                ctx.transform(0, 1, -1, 0, height, 0)
-                break
-              case 7:
-                ctx.transform(0, -1, -1, 0, height, width)
-                break
-              case 8:
-                ctx.transform(0, -1, 1, 0, 0, width)
-                break
-              default:
-                break
-            }
-
-            // draw image
-            ctx.drawImage(img, 0, 0)
-            canvas.toBlob((blob) => {
-              blob.name = file.name
-              resolve(blob)
-            })
-          }
-        })
-      }
-      Promise.resolve()
-        .then(getOrientation)
-        .then(reset)
-        .then(resolve)
-        .catch(reject)
-    })
-  }
-
   onDrop = (evt) => {
     var fileList = evt.target.files
     var acceptedFiles = []
@@ -493,49 +391,41 @@ class AvatarImageCropper extends React.Component {
         relX: 0,
         relY: 0
       })
-      this.resetOrientation(file)
-        .then((file) => {
-          acceptedFiles.push(file)
-          var src = window.URL.createObjectURL(file)
-          var img = new window.Image()
-          img.src = src
-          img.onload = () => {
-            this.img = img
-            this.img2D.width = img.width
-            this.img2D.height = img.height
-            this.img2D.ratio = img.width / img.height
-            var sizeW =
-              this.img2D.ratio >= 1
-                ? this.avatar2D.height * this.img2D.ratio
-                : this.avatar2D.width
-            sizeW = sizeW < this.avatar2D.width ? this.avatar2D.width : sizeW
-            var sizeH = sizeW / this.img2D.ratio
-            this.setState({
-              sizeW: Math.ceil(sizeW),
-              sizeH: sizeH,
-              errorMsg: '',
-              loading: false
-            })
-            this.origin = {
-              width: sizeW,
-              height: sizeH
-            }
-          }
-          file.preview = src
+      acceptedFiles.push(file)
+      var src = window.URL.createObjectURL(file)
+      var img = new window.Image()
+      img.src = src
+      img.onload = () => {
+        this.img = img
+        this.img2D.width = img.width
+        this.img2D.height = img.height
+        this.img2D.ratio = img.width / img.height
+        var sizeW =
+          this.img2D.ratio >= 1
+            ? this.avatar2D.height * this.img2D.ratio
+            : this.avatar2D.width
+        sizeW = sizeW < this.avatar2D.width ? this.avatar2D.width : sizeW
+        var sizeH = sizeW / this.img2D.ratio
+        this.setState({
+          sizeW: Math.ceil(sizeW),
+          sizeH: sizeH,
+          errorMsg: '',
+          loading: false
+        })
+        this.origin = {
+          width: sizeW,
+          height: sizeH
+        }
+      }
+      file.preview = src
 
-          if (acceptedFiles.length) {
-            this.filename = acceptedFiles[0].name
-            this.setState({ preview: acceptedFiles[0].preview })
-            if (this.props.onDrop) {
-              this.props.onDrop(acceptedFiles[0])
-            }
-          }
-        })
-        .catch(() => {
-          this.setState({
-            loading: false
-          })
-        })
+      if (acceptedFiles.length) {
+        this.filename = acceptedFiles[0].name
+        this.setState({ preview: acceptedFiles[0].preview })
+        if (this.props.onDrop) {
+          this.props.onDrop(acceptedFiles[0])
+        }
+      }
     } else if (!ifImage) {
       if (this.props.errorHandler) {
         this.props.errorHandler('not_image')
@@ -639,13 +529,23 @@ class AvatarImageCropper extends React.Component {
         this.state.sizeW,
         this.state.sizeH
       )
-    crop_canvas.toBlob((blob) => {
+    crop_canvas.toBlob(async (blob) => {
       this.ele.children[0].children[1].value = ''
       this.setState({
-        preview: null
+        preview: null,
+        loading: true
       })
       blob.name = this.filename
-      this.props.apply(blob)
+      try {
+        await this.props.apply(blob)
+        this.setState({
+          loading: false
+        })
+      } catch (error) {
+        this.setState({
+          loading: false
+        })
+      }
     })
   }
 
